@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'countries_list_screen.dart';
+
 class WorldStatus extends StatefulWidget {
   const WorldStatus({Key? key}) : super(key: key);
 
@@ -36,30 +38,30 @@ class _WorldStatusState extends State<WorldStatus>
 
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
 
-                FutureBuilder(
-                    future: statusService.fetchWorldStatusRecords(),
-                    builder: (context, AsyncSnapshot<WorldStatusModel> snapshot){
+              FutureBuilder(
+                  future: statusService.fetchWorldStatusRecords(),
+                  builder: (context, AsyncSnapshot<WorldStatusModel> snapshot){
 
-                  if (!snapshot.hasData){
+                if (!snapshot.hasData){
 
-                    return Expanded(
-                        flex: 1,
-                        child: SpinKitFadingCircle(
-                          color: Colors.white,
-                          size: 50.0,
-                          controller : _controller,
+                  return Expanded(
+                      flex: 1,
+                      child: SpinKitFadingCircle(
+                        color: Colors.white,
+                        size: 50.0,
+                        controller : _controller,
 
-                        ),);
-                  }else{
-                    return Column(
+                      ),);
+                }else{
+                  return SingleChildScrollView(
+                    child: Column(
                       children: [
 
                         PieChart(
@@ -81,7 +83,7 @@ class _WorldStatusState extends State<WorldStatus>
                         ),
 
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .06),
+                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .03),
                           child: Card(
                             child: Column(
                               children: [
@@ -100,25 +102,30 @@ class _WorldStatusState extends State<WorldStatus>
                           ),
                         ),
 
-                        Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Color(0xFF1AA260),
-                              borderRadius: BorderRadius.circular(10.0)
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CountriesListScreen()));
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Color(0xFF1AA260),
+                                borderRadius: BorderRadius.circular(10.0)
 
-                          ),
-                          child: Center(
-                            child: Text('Track Countries'),
+                            ),
+                            child: Center(
+                              child: Text('Track Countries'),
+                            ),
                           ),
                         ),
 
                       ],
-                    );
-                  }
-                }),
+                    ),
+                  );
+                }
+              }),
 
-              ],
-            ),
+            ],
           ),
         ),
       ),
@@ -134,7 +141,7 @@ class ReusableRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 5.0),
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
       child: Column(
         children: [
           Row(
@@ -144,7 +151,6 @@ class ReusableRow extends StatelessWidget {
               Text(value),
             ],
           ),
-          SizedBox(height: 5,),
           Divider()
         ],
       ),
