@@ -1,6 +1,7 @@
 import 'package:covid_tracker_app/status_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CountriesListScreen extends StatefulWidget {
   const CountriesListScreen({Key? key}) : super(key: key);
@@ -44,14 +45,45 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
               future: statusService.countriesListApi(),
               builder: (context, AsyncSnapshot<List<dynamic>> snapshot){
                 if(!snapshot.hasData){
-                  return Text('Loading...');
+                  return  ListView.builder(
+                      itemCount: 4,
+                      itemBuilder: (context, index){
+                        return Shimmer.fromColors(
+                            baseColor: Colors.grey.shade700,
+                            highlightColor: Colors.grey.shade100,
+                          child: Column(
+                          children: [
+
+                            ListTile(
+
+                              title: Container(height: 10, width: 90, color: Colors.white),
+                              subtitle: Container(height: 10, width: 90, color: Colors.white),
+                              leading: Container(height: 50, width: 50, color: Colors.white),
+                              ),
+
+                          ],
+                        )
+                        );
+                      });
                 } else{
                   return ListView.builder(
-                      itemCount: 1,
+                      itemCount: snapshot.data!.length,
                       itemBuilder: (context, index){
                     return Column(
                       children: [
 
+                        ListTile(
+
+                          title: Text(snapshot.data![index]['country']),
+                          subtitle: Text(snapshot.data![index]['cases'].toString()),
+                          leading: Image(
+                            height:50,
+                            width: 50,
+                            image: NetworkImage(
+                              snapshot.data![index]['countryInfo']['flag']
+                            ),
+                          ),
+                        )
                       ],
                     );
                   });
