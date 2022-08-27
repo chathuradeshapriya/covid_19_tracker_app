@@ -30,6 +30,12 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: searchController,
+
+                onChanged: (value){
+                  setState((){
+
+                  });
+                },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   hintText: 'Search with country name',
@@ -69,23 +75,48 @@ class _CountriesListScreenState extends State<CountriesListScreen> {
                   return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index){
-                    return Column(
-                      children: [
+                        String name = snapshot.data![index]['country'];
+                        if(searchController.text.isEmpty){
+                          return Column(
+                            children: [
 
-                        ListTile(
+                              ListTile(
 
-                          title: Text(snapshot.data![index]['country']),
-                          subtitle: Text(snapshot.data![index]['cases'].toString()),
-                          leading: Image(
-                            height:50,
-                            width: 50,
-                            image: NetworkImage(
-                              snapshot.data![index]['countryInfo']['flag']
-                            ),
-                          ),
-                        )
-                      ],
-                    );
+                                title: Text(snapshot.data![index]['country']),
+                                subtitle: Text(snapshot.data![index]['cases'].toString()),
+                                leading: Image(
+                                  height:50,
+                                  width: 50,
+                                  image: NetworkImage(
+                                      snapshot.data![index]['countryInfo']['flag']
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        }else if(name.toLowerCase().contains(searchController.text.toLowerCase())){
+                          return Column(
+                            children: [
+
+                              ListTile(
+
+                                title: Text(snapshot.data![index]['country']),
+                                subtitle: Text(snapshot.data![index]['cases'].toString()),
+                                leading: Image(
+                                  height:50,
+                                  width: 50,
+                                  image: NetworkImage(
+                                      snapshot.data![index]['countryInfo']['flag']
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        }else{
+
+                          return Container();
+                        }
+
                   });
                 }
               },
