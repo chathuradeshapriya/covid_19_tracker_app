@@ -36,77 +36,89 @@ class _WorldStatusState extends State<WorldStatus>
 
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
 
-              FutureBuilder(
-                  future: statusService.fetchWorldStatusRecords(),
-                  builder: (context, AsyncSnapshot<WorldStatusModel> snapshot){
+                FutureBuilder(
+                    future: statusService.fetchWorldStatusRecords(),
+                    builder: (context, AsyncSnapshot<WorldStatusModel> snapshot){
 
-                if (!snapshot.hasData){
+                  if (!snapshot.hasData){
 
-                  return Expanded(
-                      flex: 1,
-                      child: SpinKitFadingCircle(
-                        color: Colors.white,
-                        size: 50.0,
-                        controller : _controller,
+                    return Expanded(
+                        flex: 1,
+                        child: SpinKitFadingCircle(
+                          color: Colors.white,
+                          size: 50.0,
+                          controller : _controller,
 
-                      ),);
-                }else{
-                  return Column(
-                    children: [
+                        ),);
+                  }else{
+                    return Column(
+                      children: [
 
-                      PieChart(
-                        dataMap: {
-                          "Total" : double.parse(snapshot.data!.cases!.toString()),
-                          "Recovered" : double.parse(snapshot.data!.recovered.toString()),
-                          "Deaths" : double.parse(snapshot.data!.deaths.toString()),
-                        },
-                        chartRadius: MediaQuery.of(context).size.width / 3.2,
-                        legendOptions: const LegendOptions(
-                            legendPosition: LegendPosition.left
+                        PieChart(
+                          dataMap: {
+                            "Total" : double.parse(snapshot.data!.cases!.toString()),
+                            "Recovered" : double.parse(snapshot.data!.recovered.toString()),
+                            "Deaths" : double.parse(snapshot.data!.deaths.toString()),
+                          },
+                          chartValuesOptions: ChartValuesOptions(
+                            showChartValuesInPercentage: true,
+                          ),
+                          chartRadius: MediaQuery.of(context).size.width / 3.2,
+                          legendOptions: const LegendOptions(
+                              legendPosition: LegendPosition.left
+                          ),
+                          animationDuration: Duration(milliseconds: 1200),
+                          chartType: ChartType.ring,
+                          colorList: colorList,
                         ),
-                        animationDuration: Duration(milliseconds: 1200),
-                        chartType: ChartType.ring,
-                        colorList: colorList,
-                      ),
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .06),
-                        child: Card(
-                          child: Column(
-                            children: [
-                              ReusableRow(title: 'Total', value: '200',),
-                              ReusableRow(title: 'Total', value: '200',),
-                              ReusableRow(title: 'Total', value: '200',),
-                            ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .06),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                ReusableRow(title: 'Total', value: snapshot.data!.cases.toString()),
+                                ReusableRow(title: 'Deaths', value: snapshot.data!.deaths.toString()),
+                                ReusableRow(title: 'Tests', value: snapshot.data!.tests.toString()),
+                                ReusableRow(title: 'Recovered', value: snapshot.data!.recovered.toString()),
+                                ReusableRow(title: 'Active', value: snapshot.data!.active.toString()),
+                                ReusableRow(title: 'Critical', value: snapshot.data!.critical.toString()),
+                                ReusableRow(title: 'Today Deaths', value: snapshot.data!.todayDeaths.toString()),
+                                ReusableRow(title: 'Today Recovered', value: snapshot.data!.todayRecovered.toString()),
+
+
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF1AA260),
-                            borderRadius: BorderRadius.circular(10.0)
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Color(0xFF1AA260),
+                              borderRadius: BorderRadius.circular(10.0)
 
+                          ),
+                          child: Center(
+                            child: Text('Track Countries'),
+                          ),
                         ),
-                        child: Center(
-                          child: Text('Track Countries'),
-                        ),
-                      ),
 
-                    ],
-                  );
-                }
-              }),
+                      ],
+                    );
+                  }
+                }),
 
-            ],
+              ],
+            ),
           ),
         ),
       ),
